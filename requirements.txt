@@ -12,7 +12,7 @@ fonttools==4.51.0
 gitdb==4.0.11
 GitPython==3.1.43
 idna==3.7
-jinja2==3.1.2
+jinja2
 jsonschema==4.22.0
 jsonschema-specifications==2023.12.1
 kiwisolver==1.4.5
@@ -22,7 +22,7 @@ matplotlib==3.8.4
 mdurl==0.1.2
 numpy==1.26.4
 packaging==24.0
-pandas==2.2.2
+pandas
 pillow==10.3.0
 plotly==5.22.0
 protobuf==4.25.3
