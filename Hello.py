@@ -52,9 +52,9 @@ def run():
         st.write(filename)
         df = pd.read_csv(filename, encoding="ISO-8859-1")
     else:
-        print("Current Directory:", os.getcwd())
-        os.chdir(os.getcwd())
-        df = pd.read_csv('GlobalSuperstoreliteOriginal.csv', encoding="ISO-8859-1")
+        SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+        DATA_FILE = os.path.join(SCRIPT_DIR, "GlobalSuperstoreliteOriginal.csv")
+        df = pd.read_csv(DATA_FILE, encoding="ISO-8859-1")
 
     col1, col2 = st.columns((2))
     df["Order Date"] = pd.to_datetime(df["Order Date"])
