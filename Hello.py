@@ -54,7 +54,7 @@ def run():
     else:
         print("Current Directory:", os.getcwd())
         os.chdir(os.getcwd())
-        df = pd.read_csv("GlobalSuperstoreliteOriginal.csv", encoding="ISO-8859-1")
+        df = pd.read_csv('GlobalSuperstoreliteOriginal.csv', encoding="ISO-8859-1")
 
     col1, col2 = st.columns((2))
     df["Order Date"] = pd.to_datetime(df["Order Date"])
