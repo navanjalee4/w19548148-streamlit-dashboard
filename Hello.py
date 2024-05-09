@@ -38,8 +38,7 @@ def run():
         st.write(filename)
         df = pd.read_csv(fl, encoding="ISO-8859-1")
     else:
-        print("Current Directory:", os.getcwd())
-        os.chdir("/")
+        #os.chdir("/")
         df = pd.read_csv("GlobalSuperstoreliteOriginal.csv", encoding="ISO-8859-1")
 
     # Fill any missing values with an empty string
