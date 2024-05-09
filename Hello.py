@@ -18,13 +18,13 @@ import plotly.express as px
 import pandas as pd
 import os
 import warnings
+import plotly.figure_factory as ff
 
 warnings.filterwarnings("ignore")
 
 st.set_page_config(page_title="Superstore!!!", page_icon=":bar_chart:", layout="wide")
 
 LOGGER = get_logger(__name__)
-
 
 def run():
     # Custom CSS to set background color to dark red
@@ -39,22 +39,29 @@ def run():
         unsafe_allow_html=True,
     )
 
-    st.title(" :bar_chart: Sample SuperStore EDA")
+    st.title(":bar_chart: Sample SuperStore EDA")
     st.markdown(
         "<style>div.block-container{padding-top:1rem;}</style>", unsafe_allow_html=True
     )
 
+    # File uploader
     fl = st.file_uploader(
         ":file_folder: Upload a file", type=(["csv", "txt", "xlsx", "xls"])
     )
     if fl is not None:
-        filename = fl.name
-        st.write(filename)
-        df = pd.read_csv(filename, encoding="ISO-8859-1")
+        # If a file is uploaded, read it directly from the file object
+        if fl.name.endswith('.csv') or fl.name.endswith('.txt'):
+            df = pd.read_csv(fl, encoding="ISO-8859-1")
+        elif fl.name.endswith('.xlsx') or fl.name.endswith('.xls'):
+            df = pd.read_excel(fl)
     else:
-        print("Current Directory:", os.getcwd())
-        os.chdir(os.getcwd())
-        df = pd.read_csv("GlobalSuperstoreliteOriginal.csv", encoding="ISO-8859-1")
+        # Fallback: Read a local default file
+        local_file = "GlobalSuperstoreliteOriginal.csv"
+        if os.path.exists(local_file):
+            df = pd.read_csv(local_file, encoding="ISO-8859-1")
+        else:
+            st.error(f"Default file '{local_file}' not found. Please upload a file.")
+            return
 
     col1, col2 = st.columns((2))
     df["Order Date"] = pd.to_datetime(df["Order Date"])
@@ -89,8 +96,7 @@ def run():
     # Create for City
     city = st.sidebar.multiselect("Pick the City", df3["City"].unique())
 
-    # Filter the data based on Region, State and City
-
+    # Filter the data based on Region, State, and City
     if not region and not state and not city:
         filtered_df = df
     elif not state and not city:
@@ -195,7 +201,7 @@ def run():
             "Download Data", data=csv, file_name="TimeSeries.csv", mime="text/csv"
         )
 
-    # Create a treem based on Region, category, sub-Category
+    # Create a treemap based on Region, Category, Sub-Category
     st.subheader("Hierarchical view of Sales using TreeMap")
     fig3 = px.treemap(
         filtered_df,
@@ -270,8 +276,6 @@ def run():
         )
         st.plotly_chart(fig_customer_sales, use_container_width=True)
 
-    import plotly.figure_factory as ff
-
     st.subheader(":point_right: Month wise Sub-Category Sales Summary")
     with st.expander("Summary_Table"):
         df_sample = df[0:5][
@@ -300,7 +304,7 @@ def run():
     with st.expander("View Data"):
         st.write(filtered_df.iloc[:500, 1:20:2].style.background_gradient(cmap="Oranges"))
 
-    # Download orginal DataSet
+    # Download original DataSet
     csv = df.to_csv(index=False).encode("utf-8")
     st.download_button("Download Data", data=csv, file_name="Data.csv", mime="text/csv")
 
